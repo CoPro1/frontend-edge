@@ -1,8 +1,8 @@
 <template>
   <!-- TODO: paceholder -->
   <div>
-    <Form ref="formItem" :model="formItem" :label-width="80">
-      <FormItem label="设备名称">
+    <Form ref="formItem" :model="formItem" :label-width="80" :rules="ruleValidate">
+      <FormItem label="设备名称" prop="name">
         <Input
           :disabled="isUpdateMode"
           v-model="formItem.name"
@@ -11,19 +11,48 @@
       <!-- <FormItem label="类型">
             <Input v-model="category"></Input>
         </FormItem> -->
-      <FormItem label="型号">
+      <FormItem label="型号" prop="model">
         <Input
           :disabled="isUpdateMode"
           v-model="formItem.model"
         ></Input>
       </FormItem>
-      <FormItem label="设备描述">
+      <FormItem label="工艺单元" prop="unit">
         <Input
-          :disabled="isUpdateMode"
+          v-model="formItem.unit"
+        ></Input>
+      </FormItem>
+      <FormItem label="设备描述" prop="description">
+        <Input
           v-model="formItem.description"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 5 }"
         ></Input>
+      </FormItem>
+      <FormItem label="设备位置" prop="location">
+        <Row :gutter="10">
+          <Col>
+            <Col span="2">
+              经度
+            </Col>
+            <Col span="9">
+              <Input
+                v-model="formItem.x"
+              ></Input>
+            </Col>
+            <Col span="1">
+              &nbsp;
+            </Col>
+            <Col span="2">
+              纬度
+            </Col>
+            <Col span="10">
+              <Input
+                v-model="formItem.y"
+              ></Input>
+            </Col>
+          </Col>
+        </Row>
       </FormItem>
       <!-- TODO: validate -->
       <FormItem
@@ -130,7 +159,21 @@ export default {
       loading: false,
       bindingModalControl: false,
       activeDataSource: {},
-      bindingList: []
+      bindingList: [],
+      ruleValidate: {
+        name: [
+          { required: true, message: '设备名称不能为空', trigger: 'blur' }
+        ],
+        model: [
+          { required: true, message: '设备类型不能为空', trigger: 'blur' }
+        ],
+        unit: [
+          { required: true, message: '工艺单元不能为空', trigger: 'blur' }
+        ]
+        // location: [
+        //   { required: true, message: '设备位置不能为空', trigger: 'blur' }
+        // ]
+      }
     }
   },
   computed: {
