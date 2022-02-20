@@ -138,6 +138,28 @@ export default [
     ]
   },
   {
+    path: '/task',
+    name: '任务管理',
+    component: Main,
+    meta: {
+      title: '任务管理',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/task/manage',
+        name: '任务管理',
+        meta: {
+          hideInMenu: false,
+          title: '任务管理',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/task/task-management.vue'),
+        props: true
+      }
+    ]
+  },
+  {
     path: '/analyse',
     name: '数据分析',
     component: Main,

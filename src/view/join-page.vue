@@ -4,12 +4,12 @@
       <row class="join-page" :gutter="32">
         <i-col span="10">
           <img class="qq-group-img" src="../assets/images/icon-qr-qq-wechat.png">
-          <row type="flex" justify="center">
-            <i-col span="12">
-              <p>QQ 群号：621780943</p>
-            </i-col>
-            <i-col span="12"></i-col>
-          </row>
+<!--          <row type="flex" justify="center">-->
+<!--            <i-col span="12">-->
+<!--              <p>QQ 群号：621780943</p>-->
+<!--            </i-col>-->
+<!--            <i-col span="12"></i-col>-->
+<!--          </row>-->
         </i-col>
         <i-col span="14">
           <div class="join-page-other">
