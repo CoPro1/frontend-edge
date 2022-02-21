@@ -20,7 +20,10 @@
           style="width: 300px"
         >
           <CellGroup>
-            <Cell :title="'型号: ' + device.model" />
+            <Cell>
+              <strong>信任度:  100</strong>
+            </Cell>
+            <Cell :title="'型号: ' + device.model"/>
             <div @click="deviceDetailClick(device.id)">
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
@@ -52,10 +55,15 @@
               </Modal>
             </Col>
             <Col span="10">
-              <Button type="error" long @click="deleteBtnClick(listIndex)">
+              <Button type="warning" long @click="deleteBtnClick(listIndex)">
                 删除设备
               </Button>
             </Col>
+          </Row>
+          <Row type="flex" justify="space-around" style="padding: 19px" >
+            <Button type="error" long>
+              上报设备异常
+            </Button>
           </Row>
         </Card>
       </Col>
