@@ -15,6 +15,7 @@ export default {
       name: null,
       // category: 'test2',
       model: null,
+      crafts: null,
       description: null,
       values: [
         {
@@ -23,7 +24,14 @@ export default {
           type: null,
           protocol: null
         }
-      ]
+      ],
+      longitude: null,
+      latitude: null,
+      failure_rate: null,
+      repair_time: null,
+      load_material: null,
+      lay_off: null,
+      cleaning_time: null
     },
     deviceDataTypeList: [
       {
@@ -98,6 +106,7 @@ export default {
         name: null,
         // category: 'test2',
         model: null,
+        crafts: null,
         description: null,
         values: [
           {
@@ -106,7 +115,14 @@ export default {
             type: null,
             protocol: null
           }
-        ]
+        ],
+        longitude: null,
+        latitude: null,
+        failure_rate: null,
+        repair_time: null,
+        load_material: null,
+        lay_off: null,
+        cleaning_time: null
       }
     },
     setDeviceList (state, deviceList) {

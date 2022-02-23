@@ -17,6 +17,7 @@
           v-model="formItem.model"
         ></Input>
       </FormItem>
+<!--      zengyuxin：要改要改要改-->
       <FormItem label="工艺单元" prop="unit">
         <Input
           v-model="formItem.unit"
@@ -37,7 +38,7 @@
             </Col>
             <Col span="9">
               <Input
-                v-model="formItem.x"
+                v-model="formItem.longitude"
               ></Input>
             </Col>
             <Col span="1">
@@ -48,8 +49,75 @@
             </Col>
             <Col span="10">
               <Input
-                v-model="formItem.y"
+                v-model="formItem.latitude"
               ></Input>
+            </Col>
+          </Col>
+        </Row>
+      </FormItem>
+      <FormItem label="故障率信息" prop="failure">
+        <Row :gutter="10">
+          <Col>
+            <Col span="3">
+              故障率
+            </Col>
+            <Col span="4">
+              <Input
+                v-model="formItem.failure_rate"
+              ></Input>
+            </Col>
+            <Col span="2">
+              &nbsp;&nbsp;%&nbsp;&nbsp;
+            </Col>
+            <Col span="5">
+              故障恢复时间
+            </Col>
+            <Col span="9">
+              <Input
+                v-model="formItem.repair_time"
+              ></Input>
+            </Col>
+            <Col span="1">
+              &nbsp;min
+            </Col>
+          </Col>
+        </Row>
+      </FormItem>
+      <FormItem label="操作用时" prop="failure">
+        <Row :gutter="10">
+          <Col>
+            <Col span="3">
+              上料用时
+            </Col>
+            <Col span="3">
+              <Input
+                v-model="formItem.load_material"
+              ></Input>
+            </Col>
+            <Col span="2">
+             &nbsp;min
+            </Col>
+            <Col span="3">
+              下料用时
+            </Col>
+            <Col span="3">
+              <Input
+                v-model="formItem.lay_off"
+              ></Input>
+            </Col>
+            <Col span="2">
+              &nbsp;min
+            </Col>
+            <Col span="3">
+              清洗用时
+            </Col>
+            <Col span="3">
+              <Input
+                v-model="formItem.cleaning_time"
+              ></Input>
+            </Col>
+            <Col span="2">
+              &nbsp;min
             </Col>
           </Col>
         </Row>
@@ -170,9 +238,6 @@ export default {
         unit: [
           { required: true, message: '工艺单元不能为空', trigger: 'blur' }
         ]
-        // location: [
-        //   { required: true, message: '设备位置不能为空', trigger: 'blur' }
-        // ]
       }
     }
   },

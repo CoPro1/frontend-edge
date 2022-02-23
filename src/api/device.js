@@ -8,7 +8,7 @@ export const getDeviceListApi = () => {
 }
 
 export const addDeviceApi = (device) => {
-  let { name, model, description, values } = device
+  let { name, model, crafts, description, values, longitude, latitude, failure_rate, repair_time, load_material, lay_off, cleaning_time } = device
   values = values.map(({ name, type, protocol }) => ({ name, type, protocol }))
   return axios.request({
     url: 'device',
@@ -16,8 +16,16 @@ export const addDeviceApi = (device) => {
     data: {
       name,
       model,
+      crafts,
       description,
-      values
+      values,
+      longitude,
+      latitude,
+      failure_rate,
+      repair_time,
+      load_material,
+      lay_off,
+      cleaning_time
     }
   })
 }
