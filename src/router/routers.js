@@ -160,6 +160,29 @@ export default [
     ]
   },
   {
+    path: '/craft',
+    name: '工艺管理',
+    component: Main,
+    meta: {
+      title: '工艺管理',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/craft/manage',
+        name: '工艺管理',
+        meta: {
+          hideInMenu: false,
+          title: '工艺管理',
+          icon: 'logo-buffer'
+        },
+        // 改
+        component: () => import('@/view/task/task-management.vue'),
+        props: true
+      }
+    ]
+  },
+  {
     path: '/analyse',
     name: '数据分析',
     component: Main,

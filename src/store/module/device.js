@@ -15,7 +15,13 @@ export default {
       name: null,
       // category: 'test2',
       model: null,
-      crafts: null,
+      credibility: null,
+      crafts: [
+        {
+          name: null,
+          time: null
+        }
+      ],
       description: null,
       values: [
         {
@@ -106,6 +112,7 @@ export default {
         name: null,
         // category: 'test2',
         model: null,
+        credibility: null,
         crafts: null,
         description: null,
         values: [
