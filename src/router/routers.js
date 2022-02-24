@@ -160,7 +160,7 @@ export default [
     ]
   },
   {
-    path: '/craft',
+    path: '/process_management',
     name: '工艺管理',
     component: Main,
     meta: {
@@ -169,16 +169,31 @@ export default [
     },
     children: [
       {
-        path: '/craft/manage',
+        path: '',
         name: '工艺管理',
         meta: {
-          hideInMenu: false,
           title: '工艺管理',
-          icon: 'logo-buffer'
+          icon: 'ios-albums'
         },
-        // 改
-        component: () => import('@/view/task/task-management.vue'),
-        props: true
+        component: () => import('@/view/process-management/process-management')
+      },
+      {
+        path: 'process-configuration',
+        name: '工艺流程配置',
+        meta: {
+          title: '工艺流程配置',
+          hideInMenu: true
+        },
+        component: () => import('@/view/process-management/process-configuration')
+      },
+      {
+        path: 'process-modification',
+        name: '工艺流程编辑',
+        meta: {
+          title: '工艺流程编辑',
+          hideInMenu: true
+        },
+        component: () => import('@/view/process-management/process-modification')
       }
     ]
   },
