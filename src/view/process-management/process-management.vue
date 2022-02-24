@@ -1,39 +1,86 @@
 <template>
-  <Card>
-    <Row type="flex" justify="end">
-      <Button
-        class="add-edge"
-        type="primary"
-        icon="md-add"
-        ghost
-        to="/process_management/process-configuration"
-      >
-        新建流程
-      </Button>
-    </Row>
-    <Row>
-      <paged-table
-        :loading="loading"
-        :columns="columns"
-        :data-source=" processList"
-        :total=" processList.length"
-        style="margin-bottom: 50px"
-      />
-    </Row>
-    <Modal
-        v-model="modalControl"
-        title="下发流程"
-        footer-hide
-        :closable="false"
-      >
-        <issue-form
-          :issueProcess="issueProcess"
-          :parentCancelBtnClick="modalCancelBtnClick"
-          :parentConfirmBtnClick="modalConfirmBtnClick"
+  <div>
+    <Card>
+      <p slot="title">
+        <Icon type="md-build" />
+        现有工艺单元
+      </p>
+      <Row>
+        <Col
+          span="2"
+          v-for="(craft, listIndex) in craftList"
+          v-bind:key="listIndex"
         >
-        </issue-form>
-      </Modal>
-  </Card>
+          <Col>
+            <Tag size="large" type="primary" v-text="craft.name"></Tag>
+          </Col>
+        </Col>
+      </Row>
+      <br>
+      <Row type="flex" justify="end">
+        <Button type="info" @click="addCraftBtnClick" icon="md-add-circle">
+          新增工艺单元
+        </Button>
+      </Row>
+    </Card>
+    <br>
+    <Row>
+      <Card>
+        <Row type="flex" justify="end">
+          <Button
+            class="add-edge"
+            type="primary"
+            icon="md-add"
+            ghost
+            to="/process_management/process-configuration"
+          >
+            新建工艺流程
+          </Button>
+          <Modal
+            v-model="craftControl"
+            title="新建工艺流程"
+            footer-hide
+            :closable="false"
+          >
+            <Card>
+              <Row>
+                <Input v-model="craftName" placeholder="请输入工艺流程名称" />
+              </Row>
+              <br>
+              <Row type="flex" justify="end">
+                <Button type="primary" icon="md-checkmark" @click="addCraft" >
+                    提交
+                </Button>
+              </Row>
+            </Card>
+          </Modal>
+        </Row>
+        <br>
+        <Row>
+          <paged-table
+            :loading="loading"
+            :columns="columns"
+            :data-source=" processList"
+            :total=" processList.length"
+            style="margin-bottom: 50px"
+          />
+        </Row>
+        <Modal
+          v-model="modalControl"
+          title="下发流程"
+          footer-hide
+          :closable="false"
+        >
+          <issue-form
+            :issueProcess="issueProcess"
+            :parentCancelBtnClick="modalCancelBtnClick"
+            :parentConfirmBtnClick="modalConfirmBtnClick"
+          >
+          </issue-form>
+        </Modal>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
@@ -41,6 +88,7 @@ import PagedTable from '_c/paged-table/paged-table.vue'
 import PopConfirmButton from '_c/pop-confirm-button'
 import issueForm from '_c/issue-form/issue-form'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { addCraftUnit } from '@/api/craft'
 
 export default {
   name: 'ProcessManagement',
@@ -52,7 +100,10 @@ export default {
     return {
       loading: true,
       modalControl: false,
+      craftControl: false,
       issueProcess: null,
+      craftName: '',
+      changeTmp: false,
       columns: [
         {
           title: 'id',
@@ -131,7 +182,8 @@ export default {
       'getProcessListAction',
       'removeProcessAction',
       'connectProcessAction',
-      'connectStopProcessAction'
+      'connectStopProcessAction',
+      'getCraftListAction'
     ]),
     ...mapMutations(['setProcess']),
     handleDelete (id) {
@@ -150,6 +202,15 @@ export default {
     },
     modalConfirmBtnClick () {
       this.modalControl = false
+    },
+    addCraftBtnClick () {
+      this.craftControl = true
+    },
+    addCraft () {
+      addCraftUnit(this.craftName)
+      this.getCraftListAction()
+      this.craftControl = false
+      this.changeTmp = !this.changeTmp
     }
   },
   mounted () {
@@ -157,11 +218,18 @@ export default {
     this.getProcessListAction().then(() => {
       this.loading = false
     }).catch((err) => this.$Message.error(err.message))
+    this.getCraftListAction()
   },
   computed: {
     ...mapState({
-      processList: (state) => state.processManagement.processList
+      processList: (state) => state.processManagement.processList,
+      craftList: (state) => state.craft.craftList
     })
+  },
+  watch: {
+    changeTmp () {
+      this.$forceUpdate()
+    }
   }
 }
 </script>

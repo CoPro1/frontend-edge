@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 import store from '@/store'
 
-const url = '/process'
+const url = '/process-manage'
 
 export const getProcessList = () => axios.request({
   url: `${url}/user/${store.state.user.userId}`,
