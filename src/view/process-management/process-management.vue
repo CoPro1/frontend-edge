@@ -1,6 +1,8 @@
 <template>
   <div>
-    <Card>
+    <Card
+      :prop="craftList"
+    >
       <p slot="title">
         <Icon type="md-build" />
         现有工艺单元
@@ -208,9 +210,10 @@ export default {
     },
     addCraft () {
       addCraftUnit(this.craftName)
-      this.getCraftListAction()
+      this.craftList.push({ id: this.craftList.length, name: this.craftName })
       this.craftControl = false
       this.changeTmp = !this.changeTmp
+      this.craftName = ''
     }
   },
   mounted () {
@@ -219,6 +222,7 @@ export default {
       this.loading = false
     }).catch((err) => this.$Message.error(err.message))
     this.getCraftListAction()
+    this.craftList = state.craft.craftList
   },
   computed: {
     ...mapState({
