@@ -82,6 +82,10 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+// eslint-disable-next-line no-unused-vars
+import craft from '@/store/module/craft'
+
 export default {
   name: 'PropertyPanel',
   props: {
@@ -90,22 +94,9 @@ export default {
       required: true
     }
   },
-  computed: {
-    userTask () {
-      if (!this.element) {
-        return
-      }
-      return this.element.type === 'bpmn:UserTask'
-    },
-    sequenceFlow () {
-      if (!this.element) {
-        return
-      }
-      return this.element.type === 'bpmn:SequenceFlow'
-    }
-  },
   data () {
     return {
+      resString: '',
       form: {
         id: '',
         name: '',
@@ -144,22 +135,43 @@ export default {
   },
   mounted () {
     this.handleModeler()
+    this.getCraftListAction()
+    this.craftList = state.craft.craftList
   },
   methods: {
+    ...mapActions([
+      'getCraftListAction'
+    ]),
     handleModeler () {
       // 监听节点选择变化
       this.modeler.on('selection.changed', e => {
         const element = e.newSelection[0]
         this.element = element
         console.log(this.element)
+        console.log(this.element)
+        console.log('tyor')
         if (!element) return
         this.form = {
           ...element.businessObject,
           ...element.businessObject.$attrs
         }
+        console.log('lll' + this.form.id)
         if (this.form.userType === 'candidateUsers') {
           this.form['candidateUsers'] =
             this.form['candidateUsers'].split(',') || []
+        }
+        var tmp = this.form.id.toString()
+        console.log(tmp)
+        var cname = this.form.name.toString()
+        console.log(cname)
+        if (tmp.includes('Activity')) {
+          if (!this.checkCraftUnit(cname)) {
+            this.$Message.error('工艺单元不存在， 请检查输入')
+          }
+          // if (this.checkCraftUnit(cname) !== 'success') {
+          //   console.log(this.resString)
+          //   this.$Message.error('工艺单元不存在， 请检查输入')
+          // }
         }
       })
 
@@ -208,6 +220,72 @@ export default {
     updateProperties (properties) {
       const modeling = this.modeler.get('modeling')
       modeling.updateProperties(this.element, properties)
+    },
+    // tmp (name) {
+    //   // // eslint-disable-next-line no-return-assign
+    //   // checkCraftUnit(name).then(value => this.resString = value)
+    //   checkCraftUnit(name)
+    //     .then((d) => {
+    //       // 请求成功后
+    //       console.log('d' + d)
+    //       return { data: d }
+    //     }).catch(err => {
+    //     // 请求失败
+    //       console(err)
+    //     //   let { response } = err
+    //       // let resJson = response.json()
+    //       // // resJson 是一个promise response.text() 似乎同样
+    //       // resJson.then((res: any) => {
+    //       //   console.log(res)
+    //       // })
+    //     })
+    // },
+    checkCraftUnit (cname) {
+      // checkCraftUnit(name)
+      //   .then((d) => {
+      //     // 请求成功后
+      //     console.log('d' + d)
+      //     this.tmp(name)
+      //     console.log(this.resString)
+      //     if (d !== 'success') {
+      //       // console.log(this.resString)
+      //       this.$Message.error('工艺单元不存在， 请检查输入')
+      //     }
+      //     return { data: d }
+      //   }).catch(err => {
+      //   // 请求失败
+      //     console(err)
+      //   })
+      var flag = false
+      this.craftList.forEach((craft) => {
+        console.log('craft' + craft)
+        console.log('craftname' + craft.name)
+        if (craft.name === cname) {
+          flag = true
+        }
+      })
+      // if (!this.craftList.includes(name)) {
+      //   this.$Message.error('工艺单元不存在， 请检查输入')
+      // }
+      console.log('flag = ' + flag)
+      return flag
+    }
+  },
+  computed: {
+    ...mapState({
+      craftList: (state) => state.craft.craftList
+    }),
+    userTask () {
+      if (!this.element) {
+        return
+      }
+      return this.element.type === 'bpmn:UserTask'
+    },
+    sequenceFlow () {
+      if (!this.element) {
+        return
+      }
+      return this.element.type === 'bpmn:SequenceFlow'
     }
   }
 }

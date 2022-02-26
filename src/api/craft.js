@@ -20,3 +20,10 @@ export const addCraftUnit = (name) => {
     method: 'post'
   })
 }
+
+export const checkCraftUnit = (name) => {
+  return axios.request({
+    url: `craft/checkCraftUnit/${name}`,
+    method: 'get'
+  })
+}
