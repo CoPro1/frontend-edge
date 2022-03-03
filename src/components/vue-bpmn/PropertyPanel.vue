@@ -85,6 +85,7 @@
 import { mapActions, mapState } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import craft from '@/store/module/craft'
+import { red } from 'mockjs/src/mock/random/color_dict'
 
 export default {
   name: 'PropertyPanel',
@@ -145,33 +146,25 @@ export default {
     handleModeler () {
       // 监听节点选择变化
       this.modeler.on('selection.changed', e => {
+        console.log('执行函数')
         const element = e.newSelection[0]
         this.element = element
-        console.log(this.element)
-        console.log(this.element)
-        console.log('tyor')
+        console.log('监听节点变化' + this.element)
         if (!element) return
         this.form = {
           ...element.businessObject,
           ...element.businessObject.$attrs
         }
-        console.log('lll' + this.form.id)
-        if (this.form.userType === 'candidateUsers') {
-          this.form['candidateUsers'] =
-            this.form['candidateUsers'].split(',') || []
-        }
-        var tmp = this.form.id.toString()
+        console.log('this.form: ' + this.form)
+        const tmp = this.form.id.toString()
         console.log(tmp)
-        var cname = this.form.name.toString()
-        console.log(cname)
         if (tmp.includes('Activity')) {
+          if (!this.form.name) return
+          const cname = this.form.name.toString()
+          console.log(cname)
           if (!this.checkCraftUnit(cname)) {
-            this.$Message.error('工艺单元不存在， 请检查输入')
+            this.$Message.error('工艺单元: ' + cname + ' 不存在， 请检查输入')
           }
-          // if (this.checkCraftUnit(cname) !== 'success') {
-          //   console.log(this.resString)
-          //   this.$Message.error('工艺单元不存在， 请检查输入')
-          // }
         }
       })
 
