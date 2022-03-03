@@ -146,6 +146,7 @@ export default {
               _this.$Spin.show()
               _this.addProcessAction(formData).then(() => {
                 _this.$Message.success('添加流程成功')
+                // _this.$router.replace('/process_management')
               }).catch(err => _this.$Message.error(err.message))
                 .finally(() => _this.$Spin.hide())
             }
@@ -158,6 +159,7 @@ export default {
               // data = { ..._this.processData, id: this.processData.id }
               _this.modifyProcessAction(_this.processData).then(() => {
                 _this.$Message.success('流程修改成功')
+                // _this.$router.replace('/process_management')
               }).catch(err => _this.$Message.error(err.message))
                 .finally(() => _this.$Spin.hide())
             }

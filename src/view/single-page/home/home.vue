@@ -54,6 +54,7 @@ import CountTo from '_c/count-to'
 import { ChartPie, ChartBar } from '_c/charts'
 import Example from './example.vue'
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'home',
   components: {
     InforCard,

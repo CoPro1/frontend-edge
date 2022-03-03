@@ -214,41 +214,8 @@ export default {
       const modeling = this.modeler.get('modeling')
       modeling.updateProperties(this.element, properties)
     },
-    // tmp (name) {
-    //   // // eslint-disable-next-line no-return-assign
-    //   // checkCraftUnit(name).then(value => this.resString = value)
-    //   checkCraftUnit(name)
-    //     .then((d) => {
-    //       // 请求成功后
-    //       console.log('d' + d)
-    //       return { data: d }
-    //     }).catch(err => {
-    //     // 请求失败
-    //       console(err)
-    //     //   let { response } = err
-    //       // let resJson = response.json()
-    //       // // resJson 是一个promise response.text() 似乎同样
-    //       // resJson.then((res: any) => {
-    //       //   console.log(res)
-    //       // })
-    //     })
-    // },
+
     checkCraftUnit (cname) {
-      // checkCraftUnit(name)
-      //   .then((d) => {
-      //     // 请求成功后
-      //     console.log('d' + d)
-      //     this.tmp(name)
-      //     console.log(this.resString)
-      //     if (d !== 'success') {
-      //       // console.log(this.resString)
-      //       this.$Message.error('工艺单元不存在， 请检查输入')
-      //     }
-      //     return { data: d }
-      //   }).catch(err => {
-      //   // 请求失败
-      //     console(err)
-      //   })
       var flag = false
       this.craftList.forEach((craft) => {
         console.log('craft' + craft)
@@ -257,9 +224,6 @@ export default {
           flag = true
         }
       })
-      // if (!this.craftList.includes(name)) {
-      //   this.$Message.error('工艺单元不存在， 请检查输入')
-      // }
       console.log('flag = ' + flag)
       return flag
     }

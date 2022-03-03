@@ -209,11 +209,28 @@ export default {
       this.craftControl = true
     },
     addCraft () {
-      addCraftUnit(this.craftName)
-      this.craftList.push({ id: this.craftList.length, name: this.craftName })
-      this.craftControl = false
-      this.changeTmp = !this.changeTmp
-      this.craftName = ''
+      let flag = false
+      this.craftList.forEach((craft) => {
+        console.log('craft' + craft)
+        console.log('craftname' + craft.name)
+        if (craft.name === this.craftName) {
+          flag = true
+        }
+      })
+      console.log('flag = ' + flag)
+      if (flag === false) {
+        addCraftUnit(this.craftName)
+        console.log('添加工艺单元成功')
+        this.craftList.push({ id: this.craftList.length, name: this.craftName })
+        this.craftControl = false
+        this.changeTmp = !this.changeTmp
+        this.craftName = ''
+        this.$Message.success('添加工艺单元成功')
+      } else {
+        this.craftName = ''
+        console.log('该工艺单元已存在')
+        this.$Message.error('该工艺单元已存在')
+      }
     }
   },
   mounted () {
