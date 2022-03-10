@@ -123,10 +123,24 @@ export default {
           title: '流程状态',
           key: 'status'
         },
+        // {
+        //   title: '启用状态',
+        //   key: 'flag'
+        // },
         {
           title: '操作',
           key: 'operation',
           render: (h, { row }) => {
+            // const banButton = h(PopConfirmButton, {
+            //   props: {
+            //     buttonProps: {
+            //       size: 'small', type: 'warning'
+            //     },
+            //     buttonText: '禁用',
+            //     popTipTitle: '确定要禁用这个流程？',
+            //     ok: () => this.handleBan(row.id)
+            //   }
+            // })
             const deleteButton = h(PopConfirmButton, {
               props: {
                 buttonProps: {
@@ -183,6 +197,8 @@ export default {
     ...mapActions([
       'getProcessListAction',
       'removeProcessAction',
+      'banProcessAction',
+      'enableProcessAction',
       'connectProcessAction',
       'connectStopProcessAction',
       'getCraftListAction'
@@ -191,6 +207,20 @@ export default {
     handleDelete (id) {
       this.removeProcessAction(id).then(
         () => this.$Message.success('删除成功')
+      ).catch(
+        (err) => this.$Message.error(err.message)
+      )
+    },
+    handleBan (id) {
+      this.banProcessAction(id).then(
+        () => this.$Message.success('禁用成功')
+      ).catch(
+        (err) => this.$Message.error(err.message)
+      )
+    },
+    handleEnable (id) {
+      this.enableProcessAction(id).then(
+        () => this.$Message.success('启用成功')
       ).catch(
         (err) => this.$Message.error(err.message)
       )

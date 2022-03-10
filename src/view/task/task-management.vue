@@ -1,56 +1,62 @@
 <template>
   <Table border :columns="columns" :data="taskList">
-    <template slot-scope="{ row }" slot="releaseTime">
-      <strong>{{ row.releaseTime }}</strong>
+    <template slot-scope="{ row }" slot="arrive_time">
+      <strong>{{ row.arrive_time }}</strong>
+    </template>
+    <template slot-scope="{ row }" slot="deadline">
+      <strong>{{ row.deadline }}</strong>
+    </template>
+    <template slot-scope="{ row }" slot="description">
+      <strong>{{ row.description }}</strong>
     </template>
     <template slot-scope="{ row }" slot="action">
-      <template v-if="row.taskState === 0">
+      <template v-if="row.state === 0">
         <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id)">
           自动分配
         </Button>
         <Button  size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">手动分配</Button>
       </template>
-      <template v-if="row.taskState === 1">
+      <template v-if="row.state === 1">
         <Button type="success" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">开始生产</Button>
       </template>
-      <template v-if="row.taskState === 2">
+      <template v-if="row.state === 2">
         <Button type="warning" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">报告异常</Button>
       </template>
-      <template v-if="row.taskState === 3">
+      <template v-if="row.state === 3">
         <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id)">
           暂停生产
         </Button>
         <Button  type="error" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">终止生产</Button>
       </template>
-      <template v-if="row.taskState === 4">
+      <template v-if="row.state === 4">
         <Button  type="normal" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">查看报告</Button>
       </template>
-      <template v-if="row.taskState === 5">
+      <template v-if="row.state === 5">
         <Button  type="success" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">继续生产</Button>
       </template>
     </template>
-    <template slot-scope="{ row }" slot="taskState">
-      <Button v-if="row.taskState === 0" type="normal" size="median" style='margin-right:1%'>
+    <template slot-scope="{ row }" slot="state">
+      <Button v-if="row.state === 0" type="normal" size="median" style='margin-right:1%'>
         待分配
       </Button>
-      <Button v-if="row.taskState === 1" type="warning" size="median" style='margin-right:1%'>
+      <Button v-if="row.state === 1" type="warning" size="median" style='margin-right:1%'>
         已分配
       </Button>
-      <Button v-if="row.taskState === 2" type="error" size="median" style='margin-right:1%'>
+      <Button v-if="row.state === 2" type="error" size="median" style='margin-right:1%'>
         已终止
       </Button>
-      <Button v-if="row.taskState === 3" loading="true" type="success" size="median" style='margin-right:1%'>
+      <Button v-if="row.state === 3" loading="true" type="success" size="median" style='margin-right:1%'>
         生产中
       </Button>
-      <Button v-if="row.taskState === 4" type="success" size="median" style='margin-right:1%'>
+      <Button v-if="row.state === 4" type="success" size="median" style='margin-right:1%'>
         已完成
       </Button>
-      <Button v-if="row.taskState === 5" loading="true" type="error" size="median" style='margin-right:1%'>
+      <Button v-if="row.state === 5" loading="true" type="error" size="median" style='margin-right:1%'>
         暂停中
       </Button>
     </template>
-    <template slot-scope="{ row }" slot="name">
-      <Button size="median" type="info" style='margin-right:1%' @click="taskDetail(row.name)" v-text="row.name">
+    <template slot-scope="{ row }" slot="task_id">
+      <Button size="median" type="info" style='margin-right:1%' @click="taskDetail(row.task_id)" v-text="row.task_id">
       </Button>
       <Modal
         v-model="modalControl"
@@ -59,9 +65,51 @@
         :closable="false"
       >
         <Card>
-          <p>这里还没传值</p>
-          <p>不出意外的话传任务的基本信息</p>
-          <p>会变的值应该只有任务状态、剩余尚未生产的量、预计剩余时间这种</p>
+          <CellGroup>
+            <cell title="任务进度： ">
+              <strong>任务进度： </strong>
+              <Progress :percent="90" :stroke-color="['#108ee9', '#87d068']" />
+            </cell>
+            <Divider plain orientation="left">任务基本信息</Divider>
+            <cell>
+              <p>任务ID： {{ row.task_id }}</p>
+            </cell>
+            <cell>
+              <p>流程名称：{{ row.pro_name }} </p>
+            </cell>
+            <cell>
+              <p>任务执行次数： {{ row.times }}</p>
+            </cell>
+            <cell>
+              <p>任务发布时间： {{ row.arrive_time }}</p>
+            </cell>
+            <cell>
+              <p>任务截止时间： {{ row.deadline }}</p>
+            </cell>
+            <cell>
+              <p>下一个边缘端： {{ row.next_edge }}</p>
+            </cell>
+            <cell>
+              <p>任务描述： {{ row.description }}</p>
+            </cell>
+            <Divider plain orientation="right">任务执行轨迹</Divider>
+            <cell>
+              <Timeline>
+                <TimelineItem color="green">
+                  <p class="time">{{ row.arrive_time }}</p>
+                  <p class="content">任务发布</p>
+                </TimelineItem>
+                <TimelineItem color="blue">
+                  <p class="time">{{ row.arrive_time }}</p>
+                  <p class="content">任务分配完成</p>
+                </TimelineItem>
+                <TimelineItem color="red">
+                  <p class="time">{{ row.deadline }}</p>
+                  <p class="content">任务终止</p>
+                </TimelineItem>
+              </Timeline>
+            </cell>
+          </CellGroup>
         </Card>
       </Modal>
     </template>
@@ -70,20 +118,29 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
-// import taskDatailInfoForm from 'src/view/task/task-detail-form.vue'
 
 const columns = [
   {
     title: '任务状态',
-    slot: 'taskState'
+    slot: 'state'
   },
   {
     title: '任务名（点击查看任务详情）',
-    slot: 'name'
+    slot: 'task_id'
   },
   {
     title: '发布时间',
-    slot: 'releaseTime'
+    slot: 'arrive_time',
+    sortable: true
+  },
+  {
+    title: '任务截止时间',
+    slot: 'deadline',
+    sortable: true
+  },
+  {
+    title: '任务描述',
+    slot: 'description'
   },
   {
     title: '操作',
@@ -101,31 +158,32 @@ export default {
       number: 1,
       visibleModal: false,
       processId: null,
-      modalControl: false,
-      taskList: [
-        // taskState : 0:待分配  1：已分配 2：已终止 3：生产中 4：已完成 5：暂停中
-        { taskState: 0, name: 335, releaseTime: '2020-11-21' },
-        { taskState: 1, name: 310, releaseTime: '2020-11-20' },
-        { taskState: 2, name: 234, releaseTime: '2020-11-24' },
-        { taskState: 3, name: 135, releaseTime: '2020-11-06' },
-        { taskState: 4, name: 148, releaseTime: '2020-11-29' },
-        { taskState: 5, name: 268, releaseTime: '2020-11-25' }
-      ]
+      modalControl: false
     }
   },
   computed: {
     ...mapState({
-      processList: (state) => state.process.processList
+      processList: (state) => state.process.processList,
+      taskList: (state) => state.task.taskList
     })
   },
   methods: {
     ...mapMutations(['setActiveProcess']),
-    ...mapActions(['getAllProcessesAction', 'getBindingListAction', 'processStopAction',
+    ...mapActions(['getTaskListAction', 'getBindingListAction', 'processStopAction',
       'processStartAction', 'processDeleteAction']),
     taskDetail (name) {
       this.modalControl = true
       this.modeChange('ADD')
     }
+  },
+  mounted () {
+    this.loading = true
+    this.getTaskListAction().then(() => {
+      this.loading = false
+    }).catch((err) => this.$Message.error(err.message))
+    this.getTaskListAction()
+    this.taskList = state.task.taskList
+    console.log(this.taskList)
   }
 }
 </script>

@@ -1,4 +1,12 @@
-import { getProcessList, getProcess, removeProcess, addProcess, modifyProcess, issueProcess } from '@/api/process-management'
+import {
+  getProcessList,
+  getProcess,
+  removeProcess,
+  addProcess,
+  modifyProcess,
+  issueProcess,
+  banProcess, enableProcess
+} from '@/api/process-management'
 
 /**
  * 边缘端相关状态
@@ -89,6 +97,32 @@ export default {
       return new Promise((resolve, reject) => {
         removeProcess(id).then(() => {
           commit('deleteProcess', id)
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    /**
+     * 禁用边缘端
+     */
+    banProcessAction ({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        banProcess(id).then(() => {
+          commit('banProcess', id)
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    /**
+     * 启用边缘端
+     */
+    enableProcessAction ({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        enableProcess(id).then(() => {
+          commit('enableProcess', id)
           resolve()
         }).catch(err => {
           reject(err)

@@ -8,6 +8,7 @@ import sensor from './module/sensor'
 import process from './module/process'
 import craft from '@/store/module/craft'
 import processManagement from '@/store/module/process-management'
+import task from '@/store/module/task'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     sensor,
     process,
     craft,
-    processManagement
+    processManagement,
+    task
   }
 })
