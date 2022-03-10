@@ -60,7 +60,6 @@
       </Button>
       <Modal
         v-model="modalControl"
-        title="任务详情"
         footer-hide
         :closable="false"
       >
@@ -122,7 +121,37 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 const columns = [
   {
     title: '任务状态',
-    slot: 'state'
+    slot: 'state',
+    // taskState : 0:待分配  1：已分配 2：已终止 3：生产中 4：已完成 5：暂停中
+    filters: [
+      {
+        label: '待分配',
+        value: 0
+      },
+      {
+        label: '已分配',
+        value: 1
+      },
+      {
+        label: '已终止',
+        value: 2
+      },
+      {
+        label: '生产中',
+        value: 3
+      },
+      {
+        label: '已完成',
+        value: 4
+      },
+      {
+        label: '暂停中',
+        value: 5
+      }
+    ],
+    filterMethod (value, row) {
+      return row.state === value
+    }
   },
   {
     title: '任务名（点击查看任务详情）',
