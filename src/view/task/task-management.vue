@@ -11,28 +11,28 @@
     </template>
     <template slot-scope="{ row }" slot="action">
       <template v-if="row.state === 0">
-        <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id)">
+        <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id, )">
           自动分配
         </Button>
         <Button  size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">手动分配</Button>
       </template>
       <template v-if="row.state === 1">
-        <Button type="success" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">开始生产</Button>
+        <Button type="success" size="median" style='margin-right:1%' @click="updateState(row.id, 3)">开始生产</Button>
       </template>
       <template v-if="row.state === 2">
-        <Button type="warning" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">报告异常</Button>
+        <Button type="warning" size="median" style='margin-right:1%' @click="changeXReportControl(true)">报告异常</Button>
       </template>
       <template v-if="row.state === 3">
-        <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id)">
+        <Button type="primary" size="median" style='margin-right:1%' @click="updateState(row.id, 5)">
           暂停生产
         </Button>
-        <Button  type="error" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">终止生产</Button>
+        <Button  type="error" size="median" style='margin-right:1%' @click="updateState(row.id, 2)">终止生产</Button>
       </template>
       <template v-if="row.state === 4">
-        <Button  type="normal" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">查看报告</Button>
+        <Button  type="normal" size="median" style='margin-right:1%' @click="changeCheckControl(true)">请求验收</Button>
       </template>
       <template v-if="row.state === 5">
-        <Button  type="success" size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">继续生产</Button>
+        <Button  type="success" size="median" style='margin-right:1%' @click="updateState(row.id, 3)">继续生产</Button>
       </template>
     </template>
     <template slot-scope="{ row }" slot="state">
@@ -111,12 +111,72 @@
           </CellGroup>
         </Card>
       </Modal>
+      <Modal
+        v-model="checkControl"
+        footer-hide
+        :closable="false"
+      >
+        <Card>
+          <CellGroup>
+            <cell title="任务进度： ">
+              <strong>任务进度： </strong>
+              <Progress :percent="100" :stroke-color="['#108ee9', '#87d068']" />
+            </cell>
+            <Divider plain orientation="left">任务基本信息</Divider>
+            <cell>
+              <p>任务ID： {{ row.task_id }}</p>
+            </cell>
+            <cell>
+              <p>任务发布时间： {{ row.arrive_time }}</p>
+            </cell>
+            <cell>
+              <p>任务截止时间： {{ row.deadline }}</p>
+            </cell>
+          </CellGroup>
+          <Divider plain orientation="right">任务反馈</Divider>
+          <Input v-model="check_input" type="textarea" :rows="4" placeholder="反馈信息..." />
+          <Divider dashed="true"></Divider>
+          <Button type="success" long @click="changeCheckControl(false)">SUBMIT</Button>
+        </Card>
+      </Modal>
+      <Modal
+        v-model="xReportControl"
+        footer-hide
+        :closable="false"
+      >
+        <Card>
+          <CellGroup>
+          <Divider plain orientation="left">任务  {{ row.task_id }}  执行轨迹</Divider>
+          <cell>
+            <Timeline>
+              <TimelineItem color="green">
+                <p class="time">{{ row.arrive_time }}</p>
+                <p class="content">任务发布</p>
+              </TimelineItem>
+              <TimelineItem color="blue">
+                <p class="time">{{ row.arrive_time }}</p>
+                <p class="content">任务分配完成</p>
+              </TimelineItem>
+              <TimelineItem color="red">
+                <p class="time">{{ row.deadline }}</p>
+                <p class="content">任务终止</p>
+              </TimelineItem>
+            </Timeline>
+          </cell>
+          </CellGroup>
+          <Divider plain orientation="right">异常信息补充</Divider>
+          <Input v-model="x_report_input" type="textarea" :rows="4" placeholder="异常信息..." />
+          <Divider dashed="true"></Divider>
+          <Button type="success" long @click="changeXReportControl(false)">SUBMIT</Button>
+        </Card>
+      </Modal>
     </template>
   </Table>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
+import { updateStateApi } from '@/api/task'
 
 const columns = [
   {
@@ -179,6 +239,7 @@ const columns = [
 
 export default {
   name: 'taskManagement',
+  inject: ['reload'],
   components: {
   },
   data: function () {
@@ -187,7 +248,11 @@ export default {
       number: 1,
       visibleModal: false,
       processId: null,
-      modalControl: false
+      modalControl: false,
+      checkControl: false,
+      x_report_input: '',
+      check_input: '',
+      xReportControl: false
     }
   },
   computed: {
@@ -200,9 +265,27 @@ export default {
     ...mapMutations(['setActiveProcess']),
     ...mapActions(['getTaskListAction', 'getBindingListAction', 'processStopAction',
       'processStartAction', 'processDeleteAction']),
-    taskDetail (name) {
+    taskDetail () {
       this.modalControl = true
       this.modeChange('ADD')
+    },
+    changeXReportControl (s) {
+      this.xReportControl = s
+    },
+    updateState (id, newState) {
+      const data = { id: id, newState: newState }
+      updateStateApi(data).then(() => {
+        this.$Message.success('操作成功')
+        this.refresh()
+      }).catch(e => {
+        this.$Message.error(e.message)
+      })
+    },
+    changeCheckControl (s) {
+      this.checkControl = s
+    },
+    refresh () {
+      this.reload()
     }
   },
   mounted () {

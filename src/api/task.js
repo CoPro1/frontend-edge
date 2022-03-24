@@ -22,3 +22,11 @@ export const addTaskApi = (task) => {
     }
   })
 }
+
+export const updateStateApi = (data) => {
+  return axios.request({
+    url: `my_task/updateState`,
+    method: 'post',
+    data
+  })
+}
