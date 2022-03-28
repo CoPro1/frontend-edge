@@ -258,5 +258,27 @@ export default [
         props: true
       }
     ]
-  }
+  },
+  {
+    path: '/edgeLog',
+    name: '日志记录',
+    component: Main,
+    meta: {
+      title: '日志记录',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/edgeLog/table',
+        name: '日志记录',
+        meta: {
+          hideInMenu: false,
+          title: '日志记录',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/Log/LogView.vue'),
+        props: true
+      }
+    ]
+  },
 ]

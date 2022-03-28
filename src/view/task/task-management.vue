@@ -92,20 +92,14 @@
               <p>任务描述： {{ row.description }}</p>
             </cell>
             <Divider plain orientation="right">任务执行轨迹</Divider>
-            <cell>
-              <Timeline>
-                <TimelineItem color="green">
-                  <p class="time">{{ row.arrive_time }}</p>
-                  <p class="content">任务发布</p>
-                </TimelineItem>
-                <TimelineItem color="blue">
-                  <p class="time">{{ row.arrive_time }}</p>
-                  <p class="content">任务分配完成</p>
-                </TimelineItem>
-                <TimelineItem color="red">
-                  <p class="time">{{ row.deadline }}</p>
-                  <p class="content">任务终止</p>
-                </TimelineItem>
+            <cell >
+              <Timeline class="timeline" v-for="log in logList" :key="log.operationName">
+                <div v-if="log.operationName === row.task_id" >
+                  <TimelineItem v-if="true">
+                    <!--                  -->
+                    <p class="title">{{log.comment}}  {{log.extraWords}}</p>
+                  </TimelineItem>
+                </div>
               </Timeline>
             </cell>
           </CellGroup>
@@ -149,18 +143,12 @@
           <Divider plain orientation="left">任务  {{ row.task_id }}  执行轨迹</Divider>
           <cell>
             <Timeline>
-              <TimelineItem color="green">
-                <p class="time">{{ row.arrive_time }}</p>
-                <p class="content">任务发布</p>
-              </TimelineItem>
-              <TimelineItem color="blue">
-                <p class="time">{{ row.arrive_time }}</p>
-                <p class="content">任务分配完成</p>
-              </TimelineItem>
-              <TimelineItem color="red">
-                <p class="time">{{ row.deadline }}</p>
-                <p class="content">任务终止</p>
-              </TimelineItem>
+              <Timeline class="timeline">
+                <TimelineItem v-for="(log, listIndex) in logList"
+                              v-bind:key="listIndex">
+                  <p class="title">{{log.comment}}</p>
+                </TimelineItem>
+              </Timeline>
             </Timeline>
           </cell>
           </CellGroup>
@@ -252,22 +240,28 @@ export default {
       checkControl: false,
       x_report_input: '',
       check_input: '',
-      xReportControl: false
+      xReportControl: false,
+      task_id: ''
     }
   },
   computed: {
     ...mapState({
       processList: (state) => state.process.processList,
-      taskList: (state) => state.task.taskList
+      taskList: (state) => state.task.taskList,
+      logList: (state) => state.edgeLog.logList
     })
   },
   methods: {
+    ...mapActions(['getLogListAction']),
     ...mapMutations(['setActiveProcess']),
     ...mapActions(['getTaskListAction', 'getBindingListAction', 'processStopAction',
       'processStartAction', 'processDeleteAction']),
-    taskDetail () {
+    taskDetail (id) {
+      console.log(id)
+      this.task_id = id
+      console.log('taskDetail')
+      console.log(this.task_id)
       this.modalControl = true
-      this.modeChange('ADD')
     },
     changeXReportControl (s) {
       this.xReportControl = s
@@ -289,13 +283,13 @@ export default {
     }
   },
   mounted () {
-    this.loading = true
     this.getTaskListAction().then(() => {
       this.loading = false
     }).catch((err) => this.$Message.error(err.message))
     this.getTaskListAction()
     this.taskList = state.task.taskList
     console.log(this.taskList)
+    console.log(this.logList)
   }
 }
 </script>

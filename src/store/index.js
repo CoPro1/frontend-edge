@@ -9,6 +9,7 @@ import process from './module/process'
 import craft from '@/store/module/craft'
 import processManagement from '@/store/module/process-management'
 import task from '@/store/module/task'
+import edgeLog from '@/store/module/edge-log'
 
 Vue.use(Vuex)
 
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     process,
     craft,
     processManagement,
-    task
+    task,
+    edgeLog
   }
 })
