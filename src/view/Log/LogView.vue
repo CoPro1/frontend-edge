@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     ...mapState({
-      logList: (state) => state.edgeLog.logList
+      logList: (state) => state.edgeLog.logList.reverse()
     })
   },
   methods: {

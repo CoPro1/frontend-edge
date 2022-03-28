@@ -3,6 +3,7 @@ import { getAllEdgeLog, getTaskLog } from '@/api/edge-log'
 export default {
   state: {
     logList: [],
+    taskLogList: [],
     logInfo: null,
     logInfoForHistory: null,
     _logItem: {
@@ -45,7 +46,7 @@ export default {
       state._logItem = {
         id: null,
         appName: null,
-        objectName: null,
+        objectName: '',
         objectId: null,
         operator: null,
         operationName: null,
@@ -63,6 +64,14 @@ export default {
         state.logList = logList
       }
       console.log(logList)
+    },
+    setTaskLog (state, taskLogList) {
+      if (taskLogList == null) {
+        state.taskLogList = []
+      } else {
+        state.taskLogList = taskLogList
+      }
+      console.log(taskLogList)
     }
   },
   actions: {
@@ -71,8 +80,8 @@ export default {
       commit('setLogList', res['respData'])
       console.log('Get LogList from DB' + res['respData'])
     },
-    async getTaskLogListAction ({ commit, id }) {
-      let res = await getTaskLog(id)
+    getTaskLogListAction ({ commit, id }) {
+      let res = getTaskLog(id)
       commit('setLogList', res['respData'])
       console.log('Get LogList from DB' + res['respData'])
     }

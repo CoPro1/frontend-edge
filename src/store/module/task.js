@@ -7,7 +7,7 @@ export default {
     taskInfoForHistory: null,
     _taskItem: {
       id: null,
-      task_id: null,
+      task_id: '',
       pro_name: null,
       times: null,
       arrive_time: null,

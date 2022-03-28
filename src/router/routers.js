@@ -280,5 +280,5 @@ export default [
         props: true
       }
     ]
-  },
+  }
 ]
