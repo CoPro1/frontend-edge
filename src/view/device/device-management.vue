@@ -60,10 +60,23 @@
               </Button>
             </Col>
           </Row>
-          <Row type="flex" justify="space-around" style="padding: 19px" >
-            <Button type="error" long>
+          <Row type="flex" justify="space-around" style="padding: 19px">
+            <Button type="error" long @click="handleUpReport(true)">
               上报设备异常
             </Button>
+            <Modal
+              v-model="upReport"
+              title="上报设备异常"
+              footer-hide
+              :closable="false"
+            >
+              <Card>
+                <Divider plain orientation="right">异常信息补充</Divider>
+                <Input v-model="check_input" type="textarea" :rows="5" placeholder="反馈信息..." />
+                <Divider dashed="true"></Divider>
+                <Button type="info" long @click="handleUpReport(false)">SUBMIT</Button>
+              </Card>
+            </Modal>
           </Row>
         </Card>
       </Col>
@@ -85,6 +98,8 @@ export default {
     return {
       searchInput: '',
       modalControl: false,
+      upReport: false,
+      check_input: '',
       // detailModalControl: false,
       activeDevice: {
         id: null,
@@ -134,6 +149,13 @@ export default {
         }
       }
       return ret
+    },
+    handleUpReport (sta) {
+      this.upReport = sta
+      if (sta === false) {
+        this.$Message.success('设备异常上报成功')
+        this.check_input = ''
+      }
     },
     handleStatusCell (statue) {
       let ret = ''

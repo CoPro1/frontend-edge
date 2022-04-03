@@ -42,6 +42,12 @@ Vue.prototype.$config = config
 importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
 
+/**
+ * 粒子特效
+ */
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -168,25 +168,25 @@ export default {
               },
               '编辑'
             )
-            const issueButton = h('Button',
-              {
-                props: {
-                  size: 'small',
-                  type: 'primary'
-                },
-                style: {
-                  marginRight: '1%'
-                },
-                on: {
-                  click: () => {
-                    this.modalControl = true
-                    this.issueProcess = row
-                  }
-                }
-              },
-              '下发'
-            )
-            const buttons = [issueButton, editButton, deleteButton]
+            // const issueButton = h('Button',
+            //   {
+            //     props: {
+            //       size: 'small',
+            //       type: 'primary'
+            //     },
+            //     style: {
+            //       marginRight: '1%'
+            //     },
+            //     on: {
+            //       click: () => {
+            //         this.modalControl = true
+            //         this.issueProcess = row
+            //       }
+            //     }
+            //   },
+            //   '下发'
+            // )
+            const buttons = [editButton, deleteButton]
             return h('div', buttons)
           }
         }
@@ -247,6 +247,10 @@ export default {
           flag = true
         }
       })
+      if (this.craftName === '') {
+        this.$Message.warning('工艺单元名称为空')
+        return
+      }
       console.log('flag = ' + flag)
       if (flag === false) {
         addCraftUnit(this.craftName)

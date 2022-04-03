@@ -20,7 +20,8 @@ export default {
     // dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
     dev: '/api',
     pro: '/api',
-    log: '/log'
+    log: '/log',
+    pyb: '/pyb'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

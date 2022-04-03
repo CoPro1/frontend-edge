@@ -5,15 +5,16 @@
             <Icon type="md-build" />
             现有工艺单元(点击进行复制)
           </p>
-          <Row>
+          <Row class="row">
             <Col
+              class="col"
               span="2"
               v-for="(craft, listIndex) in craftList"
               v-bind:key="listIndex"
             >
               <Col>
                 <Button
-                  size="large"
+                  size="small"
                   class="copy"
                   @click="copywxtap"
                   :data-clipboard-text="craft.name"
@@ -87,5 +88,12 @@ export default {
 </script>
 
 <style scoped>
-
+.row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.col{
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
 </style>

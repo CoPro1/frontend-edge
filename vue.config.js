@@ -52,6 +52,12 @@ module.exports = {
         pathRewrite: {
           '^/log': '' // 请求的时候使用这个api就可以
         }
+      },
+      '/pyb': {
+        target: 'http://localhost:5000', // 这里填写你后台接口
+        pathRewrite: {
+          '^/pyb': '' // 请求的时候使用这个api就可以
+        }
       }
     }
   }

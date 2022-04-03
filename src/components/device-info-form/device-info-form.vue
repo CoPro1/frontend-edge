@@ -17,21 +17,6 @@
           v-model="formItem.model"
         ></Input>
       </FormItem>
-
-<!--&lt;!&ndash;      写不出来了 sigh&ndash;&gt;-->
-<!--      <FormItem label="工艺单元" prop="crafts">-->
-<!--        <div>-->
-<!--          <Col-->
-<!--            span="6"-->
-<!--            v-for="(craft, listIndex) in craftList"-->
-<!--            v-bind:key="listIndex"-->
-<!--            style="padding: 10px; background: #f8f8f9"-->
-<!--          >-->
-<!--            <Button size="small" type="primary" v-text="craft.name" @click="handleCraft(craft.name)"></Button>-->
-<!--            <InputNumber value="-1" size="small" :disabled="false"></InputNumber>-->
-<!--          </Col>-->
-<!--        </div>-->
-<!--      </FormItem>-->
       <FormItem
         v-for="(citem, lIndex) in formItem.crafts"
         :key="lIndex"

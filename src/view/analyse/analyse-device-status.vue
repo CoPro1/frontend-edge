@@ -27,10 +27,13 @@ import { ChartPie, ChartBar, ChartGradient } from '_c/charts'
 import { mapActions, mapState } from 'vuex'
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'analyse',
   components: {
     ChartPie,
+    // eslint-disable-next-line vue/no-unused-components
     ChartBar,
+    // eslint-disable-next-line vue/no-unused-components
     ChartGradient
   },
   data () {

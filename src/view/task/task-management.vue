@@ -1,13 +1,13 @@
 <template>
-  <Table border :columns="columns" :data="taskList">
+  <Table border :columns="columns" :data="taskList" align="center">
     <template slot-scope="{ row }" slot="arrive_time">
       <strong>{{ row.arrive_time }}</strong>
     </template>
     <template slot-scope="{ row }" slot="deadline">
       <strong>{{ row.deadline }}</strong>
     </template>
-    <template slot-scope="{ row }" slot="description">
-      <strong>{{ row.description }}</strong>
+    <template slot-scope="{ row }" slot="pro_name">
+      <strong>{{ row.pro_name }}</strong>
     </template>
     <template slot-scope="{ row }" slot="action">
       <template v-if="row.state === 0">
@@ -56,14 +56,14 @@
       </Button>
     </template>
     <template slot-scope="{ row }" slot="task_id">
-      <Button size="median" type="info" style='margin-right:1%' @click="taskDetail(row.task_id)" v-text="row.task_id">
+      <Button size="median" type="info" @click="taskDetail(row.task_id)" v-text="row.task_id">
       </Button>
       <Modal
         v-model="modalControl"
         footer-hide
         :closable="false"
       >
-        <Card>
+        <Card :model="task_info">
           <CellGroup>
             <cell title="任务进度： ">
               <strong>任务进度： </strong>
@@ -71,39 +71,39 @@
             </cell>
             <Divider plain orientation="left">任务基本信息</Divider>
             <cell>
-              <p>任务ID： {{ row.task_id }}</p>
+              <p>任务ID： {{ task_info.task_id }}</p>
             </cell>
             <cell>
-              <p>流程名称：{{ row.pro_name }} </p>
+              <p>流程名称：{{ task_info.pro_name }} </p>
             </cell>
             <cell>
-              <p>任务执行次数： {{ row.times }}</p>
+              <p>任务执行次数： {{ task_info.times }}</p>
             </cell>
             <cell>
-              <p>任务发布时间： {{ row.arrive_time }}</p>
+              <p>任务发布时间： {{ task_info.arrive_time }}</p>
             </cell>
             <cell>
-              <p>任务截止时间： {{ row.deadline }}</p>
+              <p>任务截止时间： {{ task_info.deadline }}</p>
             </cell>
             <cell>
-              <p>下一个边缘端： {{ row.next_edge }}</p>
+              <p>下一个边缘端： {{ task_info.next_edge }}</p>
             </cell>
             <cell>
-              <p>任务描述： {{ row.description }}</p>
+              <p>任务描述： {{ task_info.description }}</p>
             </cell>
             <Divider plain orientation="right">任务执行轨迹</Divider>
             <cell>
               <Timeline>
                 <TimelineItem color="green">
-                  <p class="time">{{ row.arrive_time }}</p>
+                  <p class="time">{{ task_info.arrive_time }}</p>
                   <p class="content">任务发布</p>
                 </TimelineItem>
                 <TimelineItem color="blue">
-                  <p class="time">{{ row.arrive_time }}</p>
+                  <p class="time">{{ task_info.arrive_time }}</p>
                   <p class="content">任务分配完成</p>
                 </TimelineItem>
                 <TimelineItem color="red">
-                  <p class="time">{{ row.deadline }}</p>
+                  <p class="time">{{ task_info.deadline }}</p>
                   <p class="content">任务终止</p>
                 </TimelineItem>
               </Timeline>
@@ -182,6 +182,7 @@ const columns = [
   {
     title: '任务状态',
     slot: 'state',
+    width: 150,
     // taskState : 0:待分配  1：已分配 2：已终止 3：生产中 4：已完成 5：暂停中
     filters: [
       {
@@ -214,22 +215,26 @@ const columns = [
     }
   },
   {
-    title: '任务名（点击查看任务详情）',
-    slot: 'task_id'
+    title: '任务ID（点击查看任务详情）',
+    slot: 'task_id',
+    width: 300,
+    align: 'center'
   },
   {
     title: '发布时间',
     slot: 'arrive_time',
+    width: 160,
     sortable: true
   },
   {
     title: '任务截止时间',
     slot: 'deadline',
+    width: 160,
     sortable: true
   },
   {
-    title: '任务描述',
-    slot: 'description'
+    title: '任务名称',
+    slot: 'pro_name'
   },
   {
     title: '操作',
@@ -253,7 +258,18 @@ export default {
       x_report_input: '',
       check_input: '',
       xReportControl: false,
-      task_id: ''
+      task_id: '',
+      task_info: {
+        id: '',
+        task_id: '',
+        pro_name: '',
+        times: null,
+        arrive_time: null,
+        deadline: null,
+        next_edge: null,
+        state: null,
+        description: null
+      }
     }
   },
   computed: {
@@ -264,16 +280,20 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['getLogListAction']),
+    ...mapActions(['getLogListAction', 'getTaskLogListAction']),
     ...mapMutations(['setActiveProcess']),
     ...mapActions(['getTaskListAction', 'getBindingListAction', 'processStopAction',
       'processStartAction', 'processDeleteAction']),
     taskDetail (id) {
-      console.log(id)
       this.task_id = id
-      console.log('taskDetail')
-      // state.getTaskLogListAction(id)
       this.modalControl = true
+      console.log(this.taskList)
+      this.task_info = this.taskList.find(
+        (task_info) => task_info.task_id === id
+      )
+      console.log('task_item' + this.task_info.task_id)
+      this.getTaskLogListAction(this.task_id)
+      console.log(state.task.taskLogList)
     },
     changeXReportControl (s) {
       this.xReportControl = s

@@ -113,7 +113,12 @@ export default {
         // category: 'test2',
         model: null,
         credibility: null,
-        crafts: null,
+        crafts: [
+          {
+            name: null,
+            time: null
+          }
+        ],
         description: null,
         values: [
           {

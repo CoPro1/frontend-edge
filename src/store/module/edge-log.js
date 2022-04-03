@@ -5,6 +5,7 @@ export default {
     logList: [],
     taskLogList: [],
     logInfo: null,
+    id: '',
     logInfoForHistory: null,
     _logItem: {
       id: null,
@@ -81,9 +82,11 @@ export default {
       console.log('Get LogList from DB' + res['respData'])
     },
     getTaskLogListAction ({ commit, id }) {
-      let res = getTaskLog(id)
-      commit('setLogList', res['respData'])
-      console.log('Get LogList from DB' + res['respData'])
+      this.id = id
+      let res = getTaskLog(this.id)
+      console.log('getTaskLogListAction' + this.id)
+      commit('setTaskLog', res['respData'])
+      console.log('Get TaskLog from DB' + res['respData'])
     }
   }
 }
