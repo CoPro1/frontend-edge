@@ -138,6 +138,66 @@ export default [
     ]
   },
   {
+    path: '/task',
+    name: '任务管理',
+    component: Main,
+    meta: {
+      title: '任务管理',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/task/manage',
+        name: '任务管理',
+        meta: {
+          hideInMenu: false,
+          title: '任务管理',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/task/task-management.vue'),
+        props: true
+      }
+    ]
+  },
+  {
+    path: '/process_management',
+    name: '工艺管理',
+    component: Main,
+    meta: {
+      title: '工艺管理',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '',
+        name: '工艺管理',
+        meta: {
+          title: '工艺管理',
+          icon: 'ios-albums'
+        },
+        component: () => import('@/view/process-management/process-management')
+      },
+      {
+        path: 'process-configuration',
+        name: '工艺流程配置',
+        meta: {
+          title: '工艺流程配置',
+          hideInMenu: true
+        },
+        component: () => import('@/view/process-management/process-configuration')
+      },
+      {
+        path: 'process-modification',
+        name: '工艺流程编辑',
+        meta: {
+          title: '工艺流程编辑',
+          hideInMenu: true
+        },
+        component: () => import('@/view/process-management/process-modification')
+      }
+    ]
+  },
+  {
     path: '/analyse',
     name: '数据分析',
     component: Main,
@@ -195,6 +255,28 @@ export default [
           icon: 'logo-buffer'
         },
         component: () => import('@/view/process/process-view.vue'),
+        props: true
+      }
+    ]
+  },
+  {
+    path: '/edgeLog',
+    name: '日志记录',
+    component: Main,
+    meta: {
+      title: '日志记录',
+      icon: 'logo-buffer'
+    },
+    children: [
+      {
+        path: '/edgeLog/table',
+        name: '日志记录',
+        meta: {
+          hideInMenu: false,
+          title: '日志记录',
+          icon: 'logo-buffer'
+        },
+        component: () => import('@/view/Log/LogView.vue'),
         props: true
       }
     ]

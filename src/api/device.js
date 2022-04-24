@@ -8,7 +8,7 @@ export const getDeviceListApi = () => {
 }
 
 export const addDeviceApi = (device) => {
-  let { name, model, description, values } = device
+  let { name, model, credibility, crafts, description, values, longitude, latitude, failure_rate, repair_time, load_material, lay_off, cleaning_time } = device
   values = values.map(({ name, type, protocol }) => ({ name, type, protocol }))
   return axios.request({
     url: 'device',
@@ -16,8 +16,17 @@ export const addDeviceApi = (device) => {
     data: {
       name,
       model,
+      credibility,
+      crafts,
       description,
-      values
+      values,
+      longitude,
+      latitude,
+      failure_rate,
+      repair_time,
+      load_material,
+      lay_off,
+      cleaning_time
     }
   })
 }
@@ -30,15 +39,24 @@ export const deleteDeviceApi = (deviceId) => {
 }
 
 export const modifyDeviceApi = (updateDeviceInfo) => {
-  const { id, name, model, description, values } = updateDeviceInfo
+  const { name, model, credibility, crafts, description, values, longitude, latitude, failure_rate, repair_time, load_material, lay_off, cleaning_time } = updateDeviceInfo
   return axios.request({
     url: `device/${id}`,
     method: 'put',
     data: {
       name,
       model,
+      credibility,
+      crafts,
       description,
-      values
+      values,
+      longitude,
+      latitude,
+      failure_rate,
+      repair_time,
+      load_material,
+      lay_off,
+      cleaning_time
     }
   })
 }

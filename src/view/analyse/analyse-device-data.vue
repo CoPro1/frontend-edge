@@ -29,7 +29,9 @@ import { mapActions, mapState } from 'vuex'
 export default {
   name: 'analyse-device-data',
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     ChartPie,
+    // eslint-disable-next-line vue/no-unused-components
     ChartBar,
     ChartGradient
   },

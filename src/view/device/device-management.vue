@@ -20,7 +20,10 @@
           style="width: 300px"
         >
           <CellGroup>
-            <Cell :title="'型号: ' + device.model" />
+            <Cell>
+              <strong>信任度:  100</strong>
+            </Cell>
+            <Cell :title="'型号: ' + device.model"/>
             <div @click="deviceDetailClick(device.id)">
               <Cell title="查看设备详细内容">
                 <Icon slot="extra" type="ios-link" />
@@ -35,11 +38,11 @@
           <Row type="flex" justify="space-around" style="padding: 10px">
             <Col span="10">
               <Button type="info" long @click="modifyDeviceBtnClick(device.id)">
-                初始化设备信息
+                修改设备信息
               </Button>
               <Modal
                 v-model="modalControl"
-                title="初始化设备信息"
+                title="修改设备信息"
                 footer-hide
                 :closable="false"
               >
@@ -52,10 +55,28 @@
               </Modal>
             </Col>
             <Col span="10">
-              <Button type="error" long @click="deleteBtnClick(listIndex)">
+              <Button type="warning" long @click="deleteBtnClick(listIndex)">
                 删除设备
               </Button>
             </Col>
+          </Row>
+          <Row type="flex" justify="space-around" style="padding: 19px">
+            <Button type="error" long @click="handleUpReport(true)">
+              上报设备异常
+            </Button>
+            <Modal
+              v-model="upReport"
+              title="上报设备异常"
+              footer-hide
+              :closable="false"
+            >
+              <Card>
+                <Divider plain orientation="right">异常信息补充</Divider>
+                <Input v-model="check_input" type="textarea" :rows="5" placeholder="反馈信息..." />
+                <Divider dashed="true"></Divider>
+                <Button type="info" long @click="handleUpReport(false)">SUBMIT</Button>
+              </Card>
+            </Modal>
           </Row>
         </Card>
       </Col>
@@ -77,6 +98,8 @@ export default {
     return {
       searchInput: '',
       modalControl: false,
+      upReport: false,
+      check_input: '',
       // detailModalControl: false,
       activeDevice: {
         id: null,
@@ -126,6 +149,13 @@ export default {
         }
       }
       return ret
+    },
+    handleUpReport (sta) {
+      this.upReport = sta
+      if (sta === false) {
+        this.$Message.success('设备异常上报成功')
+        this.check_input = ''
+      }
     },
     handleStatusCell (statue) {
       let ret = ''
