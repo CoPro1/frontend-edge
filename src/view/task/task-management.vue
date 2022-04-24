@@ -11,10 +11,10 @@
     </template>
     <template slot-scope="{ row }" slot="action">
       <template v-if="row.state === 0">
-        <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id, )">
-          自动分配
-        </Button>
-        <Button  size="median" style='margin-right:1%' @click="processStopBtnClick(row.id)">手动分配</Button>
+<!--        <Button type="primary" size="median" style='margin-right:1%' @click="bindingBtnClick(row.id, )">-->
+<!--          自动分配-->
+<!--        </Button>-->
+        <Button  size="median" style='margin-right:1%' @click="getTaskDeviceList(row.id, true, row.pro_name)">启动分配</Button>
       </template>
       <template v-if="row.state === 1">
         <Button type="success" size="median" style='margin-right:1%' @click="updateState(row.id, 3)">开始生产</Button>
@@ -116,27 +116,11 @@
         footer-hide
         :closable="false"
       >
-        <Card>
-          <CellGroup>
-            <cell title="任务进度： ">
-              <strong>任务进度： </strong>
-              <Progress :percent="100" :stroke-color="['#108ee9', '#87d068']" />
-            </cell>
-            <Divider plain orientation="left">任务基本信息</Divider>
-            <cell>
-              <p>任务ID： {{ row.task_id }}</p>
-            </cell>
-            <cell>
-              <p>任务发布时间： {{ row.arrive_time }}</p>
-            </cell>
-            <cell>
-              <p>任务截止时间： {{ row.deadline }}</p>
-            </cell>
-          </CellGroup>
+        <Card :model="task_info">
           <Divider plain orientation="right">任务反馈</Divider>
-          <Input v-model="check_input" type="textarea" :rows="4" placeholder="反馈信息..." />
+          <Input v-model="check_input" type="textarea" :rows="8" placeholder="反馈信息..." />
           <Divider dashed="true"></Divider>
-          <Button type="success" long @click="changeCheckControl(false)">SUBMIT</Button>
+          <Button type="primary" long @click="changeCheckControl(false)">SUBMIT</Button>
         </Card>
       </Modal>
       <Modal
@@ -144,30 +128,94 @@
         footer-hide
         :closable="false"
       >
-        <Card>
-          <CellGroup>
-          <Divider plain orientation="left">任务  {{ row.task_id }}  执行轨迹</Divider>
-            <cell>
-              <Timeline>
-                <TimelineItem color="green">
-                  <p class="time">{{ row.arrive_time }}</p>
-                  <p class="content">任务发布</p>
-                </TimelineItem>
-                <TimelineItem color="blue">
-                  <p class="time">{{ row.arrive_time }}</p>
-                  <p class="content">任务分配完成</p>
-                </TimelineItem>
-                <TimelineItem color="red">
-                  <p class="time">{{ row.deadline }}</p>
-                  <p class="content">任务终止</p>
-                </TimelineItem>
-              </Timeline>
-            </cell>
-          </CellGroup>
-          <Divider plain orientation="right">异常信息补充</Divider>
-          <Input v-model="x_report_input" type="textarea" :rows="4" placeholder="异常信息..." />
+        <Card :model="task_info">
+          <Divider plain orientation="left">异常信息补充</Divider>
+          <Input v-model="x_report_input" type="textarea" :rows="8" placeholder="异常信息..." />
           <Divider dashed="true"></Divider>
-          <Button type="success" long @click="changeXReportControl(false)">SUBMIT</Button>
+          <Button type="primary" long @click="changeXReportControl(false)">SUBMIT</Button>
+        </Card>
+      </Modal>
+      <Modal
+        v-model="ManualAllocate"
+        footer-hide
+        :closable="false"
+      >
+<!--        <Col class="demo-spin-col" span="8">-->
+<!--          <Spin fix v-if="spinShow">-->
+<!--            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
+<!--            <div>智能算法分配中</div>-->
+<!--          </Spin>-->
+<!--        </Col>-->
+        <Spin fix v-if="spinShow" class="demo-spin-col">
+          <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+          <div>智能算法分配中</div>
+        </Spin>
+<!--        <Spin size="large" fix v-if="spinShow"></Spin>-->
+        <Card>
+          <Divider plain orientation="center">智能分配完成，可进行手动调整</Divider>
+          <Row>
+            <Col>
+              <Button style="width:80px" class="button">裁剪</Button>
+              <Select style="width:326px" class="select" placeholder="裁剪机器-ABB84">
+                <Option value="New York" label="裁剪机器-ABB84">
+                  <span>裁剪机器-ABB84</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 50min</span>
+                </Option>
+                <Option value="London" label="裁剪机器-IRB53">
+                  <span>裁剪机器-IRB53</span>
+                  <span style="float:right;color:#ccc">设备状态: 运行中 预计10min后完成任务 操作用时: 45min</span>
+                </Option>
+                <Option value="Sydney" label="裁剪机器-XC40">
+                  <span>裁剪机器-XC40</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 50min</span>
+                </Option>
+              </Select>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button style="width:80px" class="button">切边</Button>
+              <Select style="width:326px" class="select" placeholder="切边机器-XC30">
+                <Option value="New York" label="切边机器-XC62">
+                  <span>切边机器-XC62</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 20min</span>
+                </Option>
+                <Option value="London" label="切边机器-XC30">
+                  <span>切边机器-XC30</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 30min</span>
+                </Option>
+                <Option value="Sydney" label="切边机器-XC75">
+                  <span>切边机器-XC75</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 50min</span>
+                </Option>
+              </Select>
+            </Col>
+          </Row>
+          <Row>
+            <Col class="button">
+              <Button style="width:80px" class="button">压制</Button>
+              <Select style="width:326px" class="select" placeholder="压制机器-XC597">
+                <Option value="New York" label="压制机器-IRB75">
+                  <span>压制机器-IRB75</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 20min</span>
+                </Option>
+                <Option value="London" label="压制机器-XC597">
+                  <span>压制机器-XC597</span>
+                  <span style="float:right;color:#ccc">设备状态: 空闲 操作用时: 30min</span>
+                </Option>
+                <Option value="Sydney" label="压制机器-ABB72" :disabled="true">
+                  <span>压制机器-ABB72</span>
+                  <span style="float:right;color:#ccc">待维修 不可用</span>
+                </Option>
+              </Select>
+            </Col>
+          </Row>
+          <Divider orientation="right">预计生产时间</Divider>
+          <Poptip word-wrap width="200" content="预计生产时长: 100min">
+            <Button>预计生产时长</Button>
+          </Poptip>
+          <Divider orientation="left">分配完成</Divider>
+          <Button type="primary" long @click="updateState(id, 1)">确认分配</Button>
         </Card>
       </Modal>
     </template>
@@ -259,6 +307,11 @@ export default {
       check_input: '',
       xReportControl: false,
       task_id: '',
+      taskDeviceList: [],
+      ManualAllocate: false,
+      id: -1,
+      spinShow: true,
+      ManualAllocateNotice: false,
       task_info: {
         id: '',
         task_id: '',
@@ -269,6 +322,10 @@ export default {
         next_edge: null,
         state: null,
         description: null
+      },
+      taskCraft: {
+        name: '',
+        craft_list: []
       }
     }
   },
@@ -276,6 +333,7 @@ export default {
     ...mapState({
       processList: (state) => state.process.processList,
       taskList: (state) => state.task.taskList,
+      taskCraftList: (state) => state.task.taskCraftList,
       taskLogList: (state) => state.edgeLog.taskLogList
     })
   },
@@ -283,22 +341,29 @@ export default {
     ...mapActions(['getLogListAction', 'getTaskLogListAction']),
     ...mapMutations(['setActiveProcess']),
     ...mapActions(['getTaskListAction', 'getBindingListAction', 'processStopAction',
-      'processStartAction', 'processDeleteAction']),
+      'processStartAction', 'processDeleteAction', 'getTaskCraftListApi']),
     taskDetail (id) {
-      this.task_id = id
       this.modalControl = true
       console.log(this.taskList)
       this.task_info = this.taskList.find(
         (task_info) => task_info.task_id === id
       )
       console.log('task_item' + this.task_info.task_id)
-      this.getTaskLogListAction(this.task_id)
+      this.getTaskLogListAction(id)
       console.log(state.task.taskLogList)
+    },
+    taskCraftDetail (name) {
+      this.taskCraft = this.taskCraftList.find(
+        (taskCraft) => taskCraft.name === name
+      )
+      console.log('taskCraft' + this.taskCraft.craft_list)
     },
     changeXReportControl (s) {
       this.xReportControl = s
+      this.x_report_input = ''
     },
     updateState (id, newState) {
+      this.ManualAllocate = false
       const data = { id: id, newState: newState }
       updateStateApi(data).then(() => {
         this.$Message.success('操作成功')
@@ -309,6 +374,16 @@ export default {
     },
     changeCheckControl (s) {
       this.checkControl = s
+      this.check_input = ''
+    },
+    getTaskDeviceList (id, state, name) {
+      setTimeout(() => {
+        this.spinShow = false
+      }, 3000)
+      this.taskCraftDetail(name)
+      this.ManualAllocate = state
+      this.ManualAllocateNotice = true
+      this.id = id
     },
     refresh () {
       this.reload()
@@ -318,13 +393,30 @@ export default {
     this.getTaskListAction().then(() => {
       this.loading = false
     }).catch((err) => this.$Message.error(err.message))
-    this.getTaskListAction()
+    this.getTaskCraftListApi().then(() => {
+      console.log('in View state.task.taskCraftList' + this.taskCraftList)
+    }).catch((err) => this.$Message.error(err.message))
     this.taskList = state.task.taskList
-    console.log(this.taskList)
-    console.log(this.logList)
   }
 }
 </script>
 
 <style lang=scss scoped>
+.button{
+  margin-right: 24px;
+  margin-bottom: 10px;
+}
+.select{
+  margin-bottom: 10px;
+}
+.demo-spin-icon-load{
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
+.demo-spin-col{
+}
 </style>

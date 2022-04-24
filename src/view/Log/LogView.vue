@@ -1,5 +1,13 @@
 <template>
   <div>
+    <Row>
+      <Select class="button" size="large" style="width:200px" placeholder="请选择文件格式">
+        <Option>CSV</Option>
+        <Option>XLS</Option>
+        <Option>HTML</Option>
+      </Select>
+        <Button size="large" class="button" icon="ios-download-outline" type="primary" @click="getFile">Download</Button>
+    </Row>
     <Card>
       <p class="card-title">
         <Icon type="ios-pricetags" />
@@ -22,6 +30,7 @@
 <script>
 
 import { mapActions, mapState } from 'vuex'
+import CsvExportor from 'csv-exportor'
 
 export default {
   name: 'LogView',
@@ -39,6 +48,16 @@ export default {
   },
   methods: {
     ...mapActions(['getLogListAction']),
+    getFile () {
+      console.log(this.logList)
+      let tableData = this.logList
+      let header = ['logId', 'OperatorType', 'Type', 'logId', 'Operator', 'AttachInfo', 'Info', 'Time', 'OperationInfo', 'TimeInUTC']
+      let aData = new Date()
+      console.log(aData)
+      let dateValue = aData.getFullYear() + '-' + (aData.getMonth() + 1) + '-' + aData.getDate() + '_' + aData.getHours() + ':' + aData.getMinutes()
+      console.log(dateValue)
+      CsvExportor.downloadCsv(tableData, { header }, dateValue + 'log.csv')
+    },
     refresh () {
       this.reload()
     }
@@ -73,5 +92,11 @@ export default {
   padding-bottom: 30px;
   padding-left: 30px;
   font-weight: bold;
+}
+
+.button{
+  /*margin-top: 20px;*/
+  margin-bottom: 20px;
+  margin-right: 20px;
 }
 </style>

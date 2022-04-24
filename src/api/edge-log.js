@@ -12,8 +12,9 @@ export const getAllEdgeLog = () => {
 }
 
 export const getTaskLog = (id) => {
+  let url = 'ObjectLoggerServer/log/query?appName=EdgeManagement&objectId=任务信息&operationName=' + id
   return t.request({
-    url: 'ObjectLoggerServer/log/query?appName=EdgeManagement&objectId=任务信息&operationName=' + id,
+    url: url,
     method: 'get'
   })
 }

@@ -7,6 +7,27 @@ export const getTaskListApi = () => {
   })
 }
 
+export const getTaskCraftList = () => {
+  return axios.request({
+    url: `my_task/getTaskCraftList`,
+    method: 'get'
+  })
+}
+
+export const getProcessDeviceApi = () => {
+  return axios.request({
+    url: `process-device`,
+    method: 'get'
+  })
+}
+
+export const getDeviceListByProName = (name) => {
+  return axios.request({
+    url: `my_task/getDeviceListByProName/${name}`,
+    method: 'get'
+  })
+}
+
 export const addTaskApi = (task) => {
   const { task_id, pro_name, times, deadline, next_edge, description } = task
   return axios.request({

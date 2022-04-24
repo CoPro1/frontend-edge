@@ -9,7 +9,12 @@ export const getProcessList = () => axios.request({
 })
 
 export const getProcess = (id) => axios.request({
-  url: `${url}/${id}}`,
+  url: `${url}/${id}`,
+  method: 'get'
+})
+
+export const getProcessByName = (name) => axios.request({
+  url: `${url}/name/${name}`,
   method: 'get'
 })
 

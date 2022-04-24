@@ -9,7 +9,7 @@ export default {
     logInfoForHistory: null,
     _logItem: {
       id: null,
-      appName: null,
+      // appName: null,
       objectName: null,
       objectId: null,
       operator: null,
@@ -17,8 +17,8 @@ export default {
       operationAlias: null,
       extraWords: null,
       comment: null,
-      operationTime: null,
-      attributeModelList: null
+      operationTime: null
+      // attributeModelList: null
     },
     mode: 'ADD'
   },
@@ -84,7 +84,7 @@ export default {
     getTaskLogListAction ({ commit, id }) {
       this.id = id
       let res = getTaskLog(this.id)
-      console.log('getTaskLogListAction' + this.id)
+      console.log('getTaskLogListAction' + id)
       commit('setTaskLog', res['respData'])
       console.log('Get TaskLog from DB' + res['respData'])
     }

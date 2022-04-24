@@ -1,9 +1,10 @@
-import { getTaskListApi } from '@/api/task'
+import { getProcessDeviceApi, getTaskCraftList, getTaskListApi } from '@/api/task'
 
 export default {
   state: {
     taskList: [],
     taskInfo: null,
+    taskCraftList: [],
     taskInfoForHistory: null,
     _taskItem: {
       id: null,
@@ -16,11 +17,15 @@ export default {
       state: null,
       description: null
     },
+    _taskCraftItem: {
+      name: null,
+      craft_list: []
+    },
     mode: 'ADD'
   },
   getters: {
     formItem (state) {
-      return { ...state._taskItem }
+      return { ...state._taskItem, ...state._taskCraftItem }
     },
     taskList (state) {
       console.log(state.taskList)
@@ -34,6 +39,12 @@ export default {
         next_edge: this.next_edge,
         state: this.state,
         description: this.description }))
+    },
+    taskCraftList (state) {
+      console.log(state.taskCraftList)
+      return state.taskCraftList.map(item => ({
+        name: item.name,
+        craft_list: item.craft_list }))
     }
   },
   mutations: {
@@ -49,6 +60,10 @@ export default {
         state: null,
         description: null
       }
+      state._taskCraftItem = {
+        name: null,
+        craft_list: []
+      }
     },
     setTaskList (state, taskList) {
       if (taskList == null) {
@@ -58,6 +73,15 @@ export default {
         state.taskList = taskList
         console.log(state.taskList)
       }
+    },
+    setTaskCraftList (state, taskCraftList) {
+      if (taskCraftList == null) {
+        state.taskCraftList = []
+        console.log(state.taskCraftList)
+      } else {
+        state.taskCraftList = taskCraftList
+        console.log('setTaskCraftList' + state.taskCraftList)
+      }
     }
   },
   actions: {
@@ -65,6 +89,11 @@ export default {
       let res = await getTaskListApi()
       commit('setTaskList', res)
       console.log('Get taskList from DB')
+    },
+    async getTaskCraftListApi ({ commit }) {
+      let res = await getTaskCraftList()
+      commit('setTaskCraftList', res)
+      console.log('Get TaskCraftListApi from DB')
     }
   }
 }
